@@ -37,7 +37,6 @@ export default {
             e.preventDefault();
             // eslint-disable-next-line no-unused-vars
             const task = {
-                id: Math.floor(Math.random() * 10000),
                 text: this.text,
                 day: this.day,
                 reminder: this.reminder

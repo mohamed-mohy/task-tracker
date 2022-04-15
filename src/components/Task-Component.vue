@@ -1,7 +1,10 @@
 <template >
     <div @dblclick="$emit('toggle-reminder',task.id)" :class="[task.reminder ? 'reminder':'','task']">
         <h4>{{task.text}}
-            <i @click="onDelete(task.id)" class="bi bi-x-lg"></i>
+            <div class="d-flex flex-column">
+                <i @click="onDelete(task.id)" class="bi bi-x-lg"></i>
+            <i @click="updateTask(task)" class="bi bi-pencil mt-2"></i>
+            </div>
             </h4>
         <p>{{task.day}}</p>
     </div>
@@ -18,6 +21,9 @@ export default {
     methods: {
         onDelete(id){
             this.$emit('delete-task',id)
+        },
+        updateTask(id){
+            this.$emit('update-task',id)
         }
     }
 }
@@ -25,6 +31,7 @@ export default {
 <style scoped lang="scss">
     .task {
     background: #eaeaea;
+    border-radius: 5px;
     color: #000;
     margin: 5px;
     padding: 10px 20px;
@@ -41,8 +48,15 @@ export default {
             color: #dc3545;
         }
     }
+    .bi-pencil{
+        &:hover{
+            color: #007bff;
+        }
+    }
+    }
+    
 }
-}
+
 .reminder {
     border-left: 7px solid #00ba00;
 }

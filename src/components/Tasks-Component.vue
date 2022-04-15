@@ -4,7 +4,8 @@
         <task-component
             @toggle-reminder="$emit('toggle-reminder', task.id)"
             @delete-task="$emit('delete-task', task.id)"
-            :task="task"
+            @update-task="$emit('update-task', task)"
+            :task="task" 
         />
         </div>
     </TransitionGroup>
@@ -20,7 +21,7 @@
         required: true,
         },
     },
-    emits: ["delete-task", "toggle-reminder"],
+    emits: ["delete-task", "toggle-reminder","update-task"],
     };
     </script>
 

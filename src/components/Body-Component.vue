@@ -6,7 +6,7 @@
                 <h3>Task List</h3>
                 
             </div>
-            <div class="col-2">
+            <div class="col-2" v-if="!updateIf">
                 <button-component @toggle-show="toggleShow" :text="show ? 'Close':'Add Task'" :color="show?'danger':'success'"/>
             </div>
             </div>
@@ -14,13 +14,17 @@
             <div v-show="show">
                 <add-task-component @add-task="addTask"/>
             </div>
-
                 </Transition>
             <div v-show="noData" class="text-center mt-5">
                 <h3>You Don't Have Any Tasks !!</h3>
             </div>
+            <Transition>
+            <div v-if="updateIf">
+                <update-task-component @updated="updatedTask" :task="data" />
+            </div>
+            </Transition>
             
-            <tasks-page @toggle-reminder="toggleReminder" @delete-task="deleteTask" :tasks="tasks"/>
+            <tasks-page @toggle-reminder="toggleReminder" @delete-task="deleteTask" @update-task="updateTask" :tasks="tasks"/>
 
         </div>
     </div>
@@ -29,20 +33,23 @@
 import ButtonComponent from './Button-Component.vue'
 import TasksPage from './Tasks-Component.vue'
 import AddTaskComponent from './AddTask-Component.vue'
+import UpdateTaskComponent from './UpdateTask-Component.vue'
 export default {
     name:'BodyComponent',
-    components: { ButtonComponent, TasksPage ,AddTaskComponent},
+    components: { ButtonComponent, TasksPage ,AddTaskComponent,UpdateTaskComponent},
         data(){
         return{
         tasks:[],
         show:false,
         noData:false,
+        data:{},
+        updateIf:false,
         }
     },
     async created(){
         this.tasks= await this.fetchTasks();
         this.show= this.dataFn;
-            this.noData=  this.dataFn;
+        this.noData=  this.dataFn;
         
     },
     methods:{
@@ -102,8 +109,29 @@ export default {
             const response = await fetch(`https://613680a58700c50017ef55c3.mockapi.io/tasks/${id}`)
             const data = await response.json()
             return data
+        },
+        async updateTask(task){
+
+            const response = await fetch(`https://613680a58700c50017ef55c3.mockapi.io/tasks/${task.id}`)
+            const data = await response.json();
+            this.data = data
+        },
+        async updatedTask(task){
+            // eslint-disable-next-line no-unused-vars
+            const response = await fetch(`https://613680a58700c50017ef55c3.mockapi.io/tasks/${task.id}`,{
+                method:'PUT',
+                body:JSON.stringify(task),
+                headers:{
+                    'Content-Type':'application/json'
+                }
+            })
+            
+            const data = await response.json();
+            this.tasks = this.tasks.map(task => task.id === data.id ? data : task);
+            this.updateIf=false;
         }
-    },
+        },
+
     computed:{
         dataFn: function(){
 
@@ -118,13 +146,21 @@ export default {
         }
     },
     watch:{
-        tasks:function(){
+        tasks:async function(){
             if(this.tasks.length==0){
                 this.noData=true;
                 this.show=true;
             }else{
                 this.noData=false;
                 this.show=false;
+            }
+            
+        },
+        data:function(){
+            if(this.data != {}){
+                this.updateIf=true;
+            }else{
+                this.updateIf=false;
             }
         }
     }
