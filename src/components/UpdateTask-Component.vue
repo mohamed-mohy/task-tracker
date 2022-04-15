@@ -1,6 +1,5 @@
 
 <template>
-
     <form v-if="show" @submit="onSubmit">
         <div class="m-3 col-6">
             <label for="taskName" class="form-label">Task Name:</label>

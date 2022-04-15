@@ -1,6 +1,9 @@
 <template>
 <header-component title="Task Tracker" />
+<Transition>
   <router-view/>
+</Transition>
+  
 </template>
 
 <style lang="scss">
@@ -25,3 +28,14 @@ export default {
   
 }
 </script>
+<style lang="scss" scoped>
+.v-enter-active,
+.v-leave-active {
+    transition: all .8s ease-in-out;
+}
+.v-enter-from,
+.v-leave-to {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+</style>
