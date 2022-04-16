@@ -10,17 +10,17 @@
                 <button-component @toggle-show="toggleShow" :text="show ? 'Close':'Add Task'" :color="show?'danger':'success'"/>
             </div>
             </div>
-                <TransitionGroup>
+                <Transition>
             <div v-show="show">
                 <add-task-component @add-task="addTask"/>
             </div>
+                </Transition>
             <div v-show="noData" class="text-center mt-5">
                 <h3>You Don't Have Any Tasks !!</h3>
             </div>
             <div v-show="updateIf">
                 <update-task-component @updated="updatedTask" :task="data" />
             </div>
-                </TransitionGroup>
             
             <tasks-page @toggle-reminder="toggleReminder" @delete-task="deleteTask" @update-task="updateTask" :tasks="tasks"/>
 

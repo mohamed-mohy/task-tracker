@@ -18,6 +18,7 @@
         </div>
         <div class="m-3 col-4">
             <button type="submit" class="btn btn-primary px-5" id="save">Save Task</button>
+            <button type="button" class="btn btn-danger mx-2 px-5" id="save" @click="close">Cancel</button>
         </div>
     </div>
     </form>
@@ -36,15 +37,15 @@ export default {
             
         };
     },
-  props:{
-      task: {
-          type: Object,
-          required: true,
-      },
-  },
-  computed:{
-      tasks:function(){
-       
+    props:{
+        task: {
+            type: Object,
+            required: true,
+        },
+    },
+    computed:{
+        tasks:function(){
+        
                 
 
 
@@ -63,18 +64,18 @@ export default {
         
       }
   },
-//   watch:{
-//         task:function() {
-//             if(this.task != undefined)
-//             {
-//                 console.log(this.task)
-//                 this.text = this.task.text
-//                 this.day = this.task.day
-//                 this.reminder = this.task.reminder
-//                 this.id = this.task.id
-//             }
-//         },
-//   },
+  watch:{
+        task:function() {
+            if(this.task != undefined)
+            {
+                this.text = this.task.text
+                this.day = this.task.day
+                this.reminder = this.task.reminder
+                this.id = this.task.id
+                this.show = true
+            }
+        },
+  },
     methods:{
         async onSubmit(e){
             e.preventDefault();
@@ -86,6 +87,9 @@ export default {
             }
             this.$emit('updated',task);
             this.show =false
+    },
+    close(){
+        this.show = false
     }
         
     },

@@ -1,8 +1,10 @@
 <template>
 <header-component title="Task Tracker" />
-<Transition>
-  <router-view/>
-</Transition>
+<router-view v-slot="{ Component }">
+  <Transition>
+    <component :is="Component" />
+  </Transition>
+</router-view>
   
 </template>
 
