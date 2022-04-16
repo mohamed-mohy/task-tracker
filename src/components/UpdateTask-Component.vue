@@ -76,7 +76,7 @@ export default {
 //         },
 //   },
     methods:{
-       async onSubmit(e){
+        async onSubmit(e){
             e.preventDefault();
             const task = {
                 id: this.id,
@@ -84,7 +84,7 @@ export default {
                 day: this.day,
                 reminder: this.reminder
             }
-           this.$emit('updated',task);
+            this.$emit('updated',task);
             this.show =false
     }
         
@@ -92,6 +92,3 @@ export default {
 }
 
 </script>
-<style lang="">
-    
-</style>
