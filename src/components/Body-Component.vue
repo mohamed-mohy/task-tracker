@@ -172,15 +172,7 @@ export default {
     padding: 20px;
     color: #eee
 }
-.v-enter-active,
-.v-leave-active {
-    transition: all .8s ease-in-out;
-}
-.v-enter-from,
-.v-leave-to {
-    opacity: 0;
-    transform: translateY(-10px);
-}
+git
 
 
 </style>
