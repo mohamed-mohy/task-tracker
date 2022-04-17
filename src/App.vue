@@ -1,10 +1,12 @@
 <template>
-<header-component title="Task Tracker" />
+<header-component class="shadow" title="Task Tracker" />
+
 <router-view v-slot="{ Component }">
-  <Transition>
-    <component :is="Component" />
-  </Transition>
+    <transition name="fade" mode="out-in">
+        <component :is="Component" />
+    </transition>
 </router-view>
+<footer-component  />
   
 </template>
 
@@ -19,25 +21,47 @@ body
 {
   background-color:#212529 !important;
 }
+/* ===== Scrollbar CSS ===== */
+  /* Firefox */
+  * {
+    scrollbar-width: auto;
+    scrollbar-color: #6c757d transparent;
+  }
+
+  /* Chrome, Edge, and Safari */
+  *::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: #6c757d;
+    border-radius: 9px;
+    border: 3px none #6c757d;
+  }
 
 </style>
 <script>
+import FooterComponent from './components/Footer-Component.vue'
 import HeaderComponent from './components/Header-Component.vue'
 
 export default {
-  components: { HeaderComponent },
+  components: { HeaderComponent, FooterComponent },
   name: 'app',
   
 }
 </script>
 <style lang="scss" scoped>
-.v-enter-active,
-.v-leave-active {
-    transition: all .8s ease-in-out;
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity .4s ease;
 }
-.v-enter-from,
-.v-leave-to {
+
+.fade-enter-from,
+.fade-leave-to {
     opacity: 0;
-    transform: translateY(-10px);
 }
 </style>

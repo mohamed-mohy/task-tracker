@@ -18,7 +18,7 @@
         </div>
         <div class="m-3 col-4">
             <button type="submit" class="btn btn-primary px-5" id="save">Save Task</button>
-            <button type="button" class="btn btn-danger mx-2 px-5" id="save" @click="close">Cancel</button>
+            <button type="button" class="btn btn-danger mx-2 px-5" id="close" @click="closeWindow">Cancel</button>
         </div>
     </div>
     </form>
@@ -88,8 +88,8 @@ export default {
             this.$emit('updated',task);
             this.show =false
     },
-    close(){
-        this.show = false
+   async closeWindow(){
+        this.$emit('closeWindow',false);
     }
         
     },

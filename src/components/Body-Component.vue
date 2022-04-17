@@ -1,12 +1,15 @@
 <template>
-    <div class="container">
+    <div v-show="!isLoading">
+        <spinner-component />
+    </div>
+    <div class="container" v-show="isLoading">
         <div class=" box ">
             <div class="row mb-4">
-            <div class="col-10 d-flex px-5">
+            <div class="col-lg-10 col-8 d-flex px-5">
                 <h3>Task List</h3>
                 
             </div>
-            <div class="col-2" v-if="!updateIf">
+            <div class="col-lg-2 col-4" v-if="!updateIf">
                 <button-component @toggle-show="toggleShow" :text="show ? 'Close':'Add Task'" :color="show?'danger':'success'"/>
             </div>
             </div>
@@ -18,10 +21,11 @@
             <div v-show="noData" class="text-center mt-5">
                 <h3>You Don't Have Any Tasks !!</h3>
             </div>
+            <Transition>
             <div v-show="updateIf">
-                <update-task-component @updated="updatedTask" :task="data" />
+                <update-task-component @updated="updatedTask" :task="data" @closeWindow="close" />
             </div>
-            
+            </Transition>
             <tasks-page @toggle-reminder="toggleReminder" @delete-task="deleteTask" @update-task="updateTask" :tasks="tasks"/>
 
         </div>
@@ -32,9 +36,17 @@ import ButtonComponent from './Button-Component.vue'
 import TasksPage from './Tasks-Component.vue'
 import AddTaskComponent from './AddTask-Component.vue'
 import UpdateTaskComponent from './UpdateTask-Component.vue'
+  import { useToast } from "vue-toastification";
+import SpinnerComponent from './Spinner-Component.vue'
+
 export default {
+        setup() {
+      // Get toast interface
+    const toast = useToast();
+    return { toast };
+    },
     name:'BodyComponent',
-    components: { ButtonComponent, TasksPage ,AddTaskComponent,UpdateTaskComponent},
+    components: { ButtonComponent, TasksPage ,AddTaskComponent,UpdateTaskComponent, SpinnerComponent},
         data(){
         return{
         tasks:[],
@@ -42,6 +54,7 @@ export default {
         noData:false,
         data:{},
         updateIf:false,
+        isLoading:false,
         }
     },
     async created(){
@@ -63,12 +76,13 @@ export default {
                             .then(result => {
                             if(result.isConfirmed){
                                 this.tasks = this.tasks.filter(task => task.id !== id);    
-                                this.$swal('Deleted!', 'Your Task has been deleted.', 'success');
                                 // eslint-disable-next-line no-unused-vars
                                 const response =  fetch(`https://613680a58700c50017ef55c3.mockapi.io/tasks/${id}`,{
                                     method:'DELETE',
                                 })
+                                    this.toast.error("Task Has Been Deleted");
                             }});
+
         },
         async toggleReminder(id){
 
@@ -81,6 +95,11 @@ export default {
                 }
             })
             this.tasks = this.tasks.map(task => task.id === id ? {...task,reminder:!task.reminder} : task);
+            if(this.tasks.find(task => task.id === id).reminder){
+                this.toast.success("Reminder \""+ this.tasks.find(task => task.id === id).text + "\" Set Successfully");
+            }else{
+                this.toast.error("Reminder \""+ this.tasks.find(task => task.id === id).text + "\" Removed");
+            }
         },
         async addTask(task){
             const response = await fetch('https://613680a58700c50017ef55c3.mockapi.io/tasks',{
@@ -94,6 +113,8 @@ export default {
             this.tasks.push(data)
             this.show=false;
             this.noData=false;
+            this.toast.success("Added Successfully ");
+
         },
         toggleShow(){
             this.show = !this.show
@@ -101,6 +122,7 @@ export default {
         async fetchTasks(){
             const response = await fetch('https://613680a58700c50017ef55c3.mockapi.io/tasks')
             const data = await response.json()
+            this.isLoading=this.dataFn;
             return data
         },
         async fetchTask(id){
@@ -127,7 +149,12 @@ export default {
             const data = await response.json();
             this.tasks = this.tasks.map(task => task.id === data.id ? data : task);
             this.updateIf=false;
-        }
+            this.toast.success("Task Has Been Updated Successfully");
+        },
+        async close(){
+
+            this.updateIf=false;
+        },
         },
 
     computed:{
@@ -160,7 +187,9 @@ export default {
             }else{
                 this.updateIf=false;
             }
-        }
+        },
+        
+        
     }
 }
 </script>

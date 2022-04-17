@@ -35,6 +35,7 @@ export default {
     color: #000;
     margin: 5px;
     padding: 10px 20px;
+    word-wrap: break-word;
     cursor: pointer;
     display: flex;
     justify-content: flex-start;

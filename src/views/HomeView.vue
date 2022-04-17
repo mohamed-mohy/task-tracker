@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home h-100">
     <body-component/>
   </div>
 </template>
@@ -17,3 +17,8 @@ export default {
   
 }
 </script>
+<style lang="scss" scoped>
+.home{
+    min-height: calc(100vh - 200px);
+}
+</style>
